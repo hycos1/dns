@@ -1,0 +1,245 @@
+# SmartDNS - CoreDNS Configuration
+# Перенаправление DNS запросов на SNI Proxy для обхода блокировок
+
+# ⚠️ ВАЖНО: Замени YOUR_SERVER_IP на реальный IP твоего VPS!
+# Например: 185.123.45.67
+
+. {
+    # Кэширование DNS ответов
+    cache 3600
+    
+    # Перехват ошибок
+    errors
+    
+    # Раскомментируй для отладки:
+    # log
+    
+    # ═══════════════════════════════════════════════════════════
+    # 🎮 ИГРЫ
+    # ═══════════════════════════════════════════════════════════
+    
+    # --- Brawl Stars ---
+    template IN A game.brawlstars.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    template IN A event.brawlstars.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    template IN A brawlstars.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    
+    # --- Supercell ---
+    template IN A supercell.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    template IN A id.supercell.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    template IN A game.supercellid.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    template IN A csv.game.supercellid.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    template IN A prod.gamesconfiguration.supercell.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    template IN A api-assets.supercell.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    
+    # --- Clash of Clans ---
+    template IN A clashofclans.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    
+    # --- Clash Royale ---
+    template IN A clashroyale.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    
+    # ═══════════════════════════════════════════════════════════
+    # 📱 СОЦИАЛЬНЫЕ СЕТИ
+    # ═══════════════════════════════════════════════════════════
+    
+    # --- Instagram ---
+    template IN A instagram.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    template IN A i.instagram.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    template IN A graph.instagram.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    
+    # --- Facebook ---
+    template IN A facebook.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    template IN A fb.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    template IN A connect.facebook.net {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    
+    # --- Twitter / X ---
+    template IN A twitter.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    template IN A x.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    template IN A api.twitter.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    template IN A api.x.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    template IN A abs.twimg.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    template IN A pbs.twimg.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    template IN A t.co {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    
+    # --- Threads ---
+    template IN A threads.net {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    
+    # ═══════════════════════════════════════════════════════════
+    # 💬 МЕССЕНДЖЕРЫ
+    # ═══════════════════════════════════════════════════════════
+    
+    # --- Discord ---
+    template IN A discord.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    template IN A discordapp.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    template IN A discord.gg {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    template IN A cdn.discordapp.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    template IN A gateway.discord.gg {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    template IN A media.discordapp.net {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    
+    # --- LinkedIn ---
+    template IN A linkedin.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    
+    # ═══════════════════════════════════════════════════════════
+    # 🎬 СТРИМИНГ
+    # ═══════════════════════════════════════════════════════════
+    
+    # --- Spotify ---
+    template IN A spotify.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    template IN A spclient.wg.spotify.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    template IN A apresolve.spotify.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    
+    # --- SoundCloud ---
+    template IN A soundcloud.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    
+    # --- Netflix ---
+    template IN A netflix.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    
+    # --- Twitch ---
+    template IN A twitch.tv {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    
+    # ═══════════════════════════════════════════════════════════
+    # 🔧 СЕРВИСЫ
+    # ═══════════════════════════════════════════════════════════
+    
+    # --- OpenAI / ChatGPT ---
+    template IN A openai.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    template IN A chat.openai.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    template IN A api.openai.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    
+    # --- Notion ---
+    template IN A notion.so {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    template IN A notion.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    
+    # --- Medium ---
+    template IN A medium.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    
+    # --- Patreon ---
+    template IN A patreon.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    
+    # --- BBC ---
+    template IN A bbc.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    template IN A bbc.co.uk {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    
+    # --- Archive.org ---
+    template IN A archive.org {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    template IN A web.archive.org {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    
+    # --- ProtonMail ---
+    template IN A protonmail.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    template IN A proton.me {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    
+    # --- PayPal ---
+    template IN A paypal.com {
+        answer "{{ .Name }} 60 IN A YOUR_SERVER_IP"
+    }
+    
+    # ═══════════════════════════════════════════════════════════
+    # Все остальные запросы → Google/Cloudflare DNS
+    # ═══════════════════════════════════════════════════════════
+    
+    forward . 8.8.8.8 8.8.4.4 1.1.1.1 {
+        prefer_udp
+        health_check 5s
+    }
+}

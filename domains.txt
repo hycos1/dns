@@ -1,0 +1,194 @@
+# Список доменов для проксирования через SmartDNS
+# Добавляй новые домены по мере необходимости
+
+# ═══════════════════════════════════════════════════════════
+# 🎮 ИГРЫ
+# ═══════════════════════════════════════════════════════════
+
+# --- Brawl Stars / Supercell ---
+game.brawlstars.com
+event.brawlstars.com
+brawlstars.com
+*.brawlstars.com
+id.supercell.com
+supercell.com
+*.supercell.com
+game.supercellid.com
+csv.game.supercellid.com
+supercell.net
+*.supercell.net
+api-assets.supercell.com
+prod.gamesconfiguration.supercell.com
+
+# --- Clash of Clans ---
+clashofclans.com
+*.clashofclans.com
+
+# --- Clash Royale ---
+clashroyale.com
+*.clashroyale.com
+
+# ═══════════════════════════════════════════════════════════
+# 📱 СОЦИАЛЬНЫЕ СЕТИ
+# ═══════════════════════════════════════════════════════════
+
+# --- Instagram ---
+instagram.com
+*.instagram.com
+*.cdninstagram.com
+i.instagram.com
+graph.instagram.com
+
+# --- Facebook ---
+facebook.com
+*.facebook.com
+*.fbcdn.net
+*.facebook.net
+fb.com
+*.fb.com
+fbcdn.net
+connect.facebook.net
+
+# --- Twitter / X ---
+twitter.com
+*.twitter.com
+x.com
+*.x.com
+twimg.com
+*.twimg.com
+t.co
+abs.twimg.com
+pbs.twimg.com
+api.twitter.com
+api.x.com
+
+# --- Threads ---
+threads.net
+*.threads.net
+
+# ═══════════════════════════════════════════════════════════
+# 💬 МЕССЕНДЖЕРЫ И КОММУНИКАЦИИ
+# ═══════════════════════════════════════════════════════════
+
+# --- Discord ---
+discord.com
+*.discord.com
+discordapp.com
+*.discordapp.com
+discord.gg
+*.discord.gg
+discord.media
+*.discord.media
+discordapp.net
+*.discordapp.net
+cdn.discordapp.com
+gateway.discord.gg
+media.discordapp.net
+
+# --- LinkedIn ---
+linkedin.com
+*.linkedin.com
+*.licdn.com
+
+# ═══════════════════════════════════════════════════════════
+# 🎬 СТРИМИНГ И МЕДИА
+# ═══════════════════════════════════════════════════════════
+
+# --- Spotify ---
+spotify.com
+*.spotify.com
+*.spotifycdn.com
+*.scdn.co
+spclient.wg.spotify.com
+apresolve.spotify.com
+
+# --- SoundCloud ---
+soundcloud.com
+*.soundcloud.com
+*.sndcdn.com
+
+# --- Netflix ---
+netflix.com
+*.netflix.com
+*.nflxvideo.net
+*.nflximg.net
+*.nflxext.com
+*.nflxso.net
+
+# --- Twitch ---
+twitch.tv
+*.twitch.tv
+*.ttvnw.net
+*.jtvnw.net
+
+# ═══════════════════════════════════════════════════════════
+# 🔧 СЕРВИСЫ И ИНСТРУМЕНТЫ
+# ═══════════════════════════════════════════════════════════
+
+# --- OpenAI / ChatGPT ---
+openai.com
+*.openai.com
+chat.openai.com
+api.openai.com
+
+# --- Notion ---
+notion.so
+*.notion.so
+notion.com
+*.notion.com
+
+# --- Medium ---
+medium.com
+*.medium.com
+
+# --- Patreon ---
+patreon.com
+*.patreon.com
+
+# --- BBC ---
+bbc.com
+*.bbc.com
+bbc.co.uk
+*.bbc.co.uk
+bbci.co.uk
+*.bbci.co.uk
+
+# ═══════════════════════════════════════════════════════════
+# 🛒 МАГАЗИНЫ И ПЛАТЕЖИ
+# ═══════════════════════════════════════════════════════════
+
+# --- PayPal ---
+paypal.com
+*.paypal.com
+paypalobjects.com
+*.paypalobjects.com
+
+# ═══════════════════════════════════════════════════════════
+# ☁️ РАЗНОЕ
+# ═══════════════════════════════════════════════════════════
+
+# --- Archive.org ---
+archive.org
+*.archive.org
+web.archive.org
+
+# --- ProtonMail ---
+protonmail.com
+*.protonmail.com
+proton.me
+*.proton.me
+
+# ═══════════════════════════════════════════════════════════
+# 📝 ПРИМЕЧАНИЯ
+# ═══════════════════════════════════════════════════════════
+#
+# Чтобы добавить новый сервис:
+# 1. Добавь домены в этот файл
+# 2. Добавь в /opt/smartdns/coredns/Corefile
+# 3. Добавь в /opt/smartdns/sniproxy/config.yaml
+# 4. Выполни: docker compose restart
+#
+# Как найти домены приложения:
+# - Android: DNS Logger app
+# - iOS: смотри логи в DNSCloak
+# - ПК: Wireshark или браузер DevTools

@@ -1,0 +1,158 @@
+# SmartDNS - SNI Proxy Configuration
+# Прозрачное проксирование HTTPS трафика для обхода блокировок
+
+# Адрес для прослушивания TLS/HTTPS
+tls_addr: 0.0.0.0:443
+
+# Адрес для прослушивания HTTP
+http_addr: 0.0.0.0:80
+
+# DNS сервер для резолвинга реальных IP адресов
+dns_addr: 8.8.8.8:53
+
+# Таймаут подключения (секунды)
+timeout: 10
+
+# Разрешённые домены для проксирования
+allowed_domains:
+  # ═══════════════════════════════════════
+  # 🎮 ИГРЫ
+  # ═══════════════════════════════════════
+
+  # Brawl Stars / Supercell
+  - "*.brawlstars.com"
+  - "brawlstars.com"
+  - "*.supercell.com"
+  - "supercell.com"
+  - "*.supercell.net"
+  - "supercell.net"
+
+  # Clash of Clans / Clash Royale
+  - "*.clashofclans.com"
+  - "clashofclans.com"
+  - "*.clashroyale.com"
+  - "clashroyale.com"
+
+  # ═══════════════════════════════════════
+  # 📱 СОЦИАЛЬНЫЕ СЕТИ
+  # ═══════════════════════════════════════
+
+  # Instagram
+  - "*.instagram.com"
+  - "instagram.com"
+  - "*.cdninstagram.com"
+
+  # Facebook
+  - "*.facebook.com"
+  - "facebook.com"
+  - "*.fbcdn.net"
+  - "*.facebook.net"
+  - "*.fb.com"
+  - "fb.com"
+
+  # Twitter / X
+  - "*.twitter.com"
+  - "twitter.com"
+  - "*.x.com"
+  - "x.com"
+  - "*.twimg.com"
+  - "t.co"
+
+  # Threads
+  - "*.threads.net"
+  - "threads.net"
+
+  # ═══════════════════════════════════════
+  # 💬 МЕССЕНДЖЕРЫ
+  # ═══════════════════════════════════════
+
+  # Discord
+  - "*.discord.com"
+  - "discord.com"
+  - "*.discordapp.com"
+  - "discordapp.com"
+  - "*.discord.gg"
+  - "discord.gg"
+  - "*.discord.media"
+  - "*.discordapp.net"
+
+  # LinkedIn
+  - "*.linkedin.com"
+  - "linkedin.com"
+  - "*.licdn.com"
+
+  # ═══════════════════════════════════════
+  # 🎬 СТРИМИНГ
+  # ═══════════════════════════════════════
+
+  # Spotify
+  - "*.spotify.com"
+  - "spotify.com"
+  - "*.spotifycdn.com"
+  - "*.scdn.co"
+
+  # SoundCloud
+  - "*.soundcloud.com"
+  - "soundcloud.com"
+  - "*.sndcdn.com"
+
+  # Netflix
+  - "*.netflix.com"
+  - "netflix.com"
+  - "*.nflxvideo.net"
+  - "*.nflximg.net"
+  - "*.nflxext.com"
+  - "*.nflxso.net"
+
+  # Twitch
+  - "*.twitch.tv"
+  - "twitch.tv"
+  - "*.ttvnw.net"
+  - "*.jtvnw.net"
+
+  # ═══════════════════════════════════════
+  # 🔧 СЕРВИСЫ
+  # ═══════════════════════════════════════
+
+  # OpenAI / ChatGPT
+  - "*.openai.com"
+  - "openai.com"
+
+  # Notion
+  - "*.notion.so"
+  - "notion.so"
+  - "*.notion.com"
+  - "notion.com"
+
+  # Medium
+  - "*.medium.com"
+  - "medium.com"
+
+  # Patreon
+  - "*.patreon.com"
+  - "patreon.com"
+
+  # BBC
+  - "*.bbc.com"
+  - "bbc.com"
+  - "*.bbc.co.uk"
+  - "bbc.co.uk"
+  - "*.bbci.co.uk"
+
+  # Archive.org
+  - "*.archive.org"
+  - "archive.org"
+
+  # ProtonMail
+  - "*.protonmail.com"
+  - "protonmail.com"
+  - "*.proton.me"
+  - "proton.me"
+
+  # PayPal
+  - "*.paypal.com"
+  - "paypal.com"
+  - "*.paypalobjects.com"
+
+# Логирование
+log_level: info
