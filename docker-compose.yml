@@ -1,7 +1,7 @@
-version: '3.8'
+version: "3.8"
 
 services:
-  # DNS сервер - обрабатывает DNS запросы и перенаправляет нужные домены на SNI Proxy
+  # DNS сервер
   coredns:
     image: coredns/coredns:latest
     container_name: smartdns-coredns
@@ -20,16 +20,16 @@ services:
         max-size: "10m"
         max-file: "3"
 
-  # SNI Proxy - прозрачно проксирует HTTPS трафик на основе SNI
+  # SNI Proxy - используем проверенный образ
   sniproxy:
-    image: mosajjal/sniproxy:latest
+    image: vimagick/sniproxy
     container_name: smartdns-sniproxy
     restart: always
     ports:
       - "443:443"
       - "80:80"
     volumes:
-      - ./sniproxy/config.yaml:/config.yaml:ro
+      - ./sniproxy/sniproxy.conf:/etc/sniproxy.conf:ro
     networks:
       - smartdns
     logging:

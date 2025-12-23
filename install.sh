@@ -21,7 +21,7 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 CYAN='\033[0;36m'
-NC='\033[0m' # No Color
+NC='\033[0m'
 
 echo -e "${BLUE}"
 echo "╔═══════════════════════════════════════════════════════════════╗"
@@ -60,11 +60,9 @@ if ! command -v docker &> /dev/null; then
     apt install -y apt-transport-https ca-certificates curl gnupg lsb-release
     
     # Определяем дистрибутив
-    if [ -f /etc/debian_version ]; then
-        OS="debian"
-        if grep -q "Ubuntu" /etc/os-release; then
-            OS="ubuntu"
-        fi
+    OS="debian"
+    if grep -q "Ubuntu" /etc/os-release 2>/dev/null; then
+        OS="ubuntu"
     fi
     
     # Добавление репозитория Docker
@@ -87,7 +85,7 @@ fi
 # ===== ШАГ 3: Отключение systemd-resolved =====
 echo -e "${YELLOW}[3/6] Освобождение порта 53...${NC}"
 
-if systemctl is-active --quiet systemd-resolved; then
+if systemctl is-active --quiet systemd-resolved 2>/dev/null; then
     systemctl stop systemd-resolved
     systemctl disable systemd-resolved
     
@@ -109,11 +107,11 @@ ufw --force reset > /dev/null 2>&1
 ufw default deny incoming > /dev/null 2>&1
 ufw default allow outgoing > /dev/null 2>&1
 
-ufw allow 22/tcp comment 'SSH' > /dev/null 2>&1
-ufw allow 53/tcp comment 'DNS TCP' > /dev/null 2>&1
-ufw allow 53/udp comment 'DNS UDP' > /dev/null 2>&1
-ufw allow 80/tcp comment 'HTTP' > /dev/null 2>&1
-ufw allow 443/tcp comment 'HTTPS/SNI Proxy' > /dev/null 2>&1
+ufw allow 22/tcp > /dev/null 2>&1
+ufw allow 53/tcp > /dev/null 2>&1
+ufw allow 53/udp > /dev/null 2>&1
+ufw allow 80/tcp > /dev/null 2>&1
+ufw allow 443/tcp > /dev/null 2>&1
 
 ufw --force enable > /dev/null 2>&1
 
@@ -143,28 +141,18 @@ services:
     command: -conf /etc/coredns/Corefile
     networks:
       - smartdns
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
 
   sniproxy:
-    image: mosajjal/sniproxy:latest
+    image: vimagick/sniproxy
     container_name: smartdns-sniproxy
     restart: always
     ports:
       - "443:443"
       - "80:80"
     volumes:
-      - ./sniproxy/config.yaml:/config.yaml:ro
+      - ./sniproxy/sniproxy.conf:/etc/sniproxy.conf:ro
     networks:
       - smartdns
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
 
 networks:
   smartdns:
@@ -177,10 +165,7 @@ cat > /opt/smartdns/coredns/Corefile << COREFILE_EOF
     cache 3600
     errors
     
-    # ═══════════════════════════════════════
     # 🎮 ИГРЫ (Supercell)
-    # ═══════════════════════════════════════
-    
     template IN A game.brawlstars.com {
         answer "{{ .Name }} 60 IN A ${SERVER_IP}"
     }
@@ -215,11 +200,7 @@ cat > /opt/smartdns/coredns/Corefile << COREFILE_EOF
         answer "{{ .Name }} 60 IN A ${SERVER_IP}"
     }
     
-    # ═══════════════════════════════════════
-    # 📱 СОЦИАЛЬНЫЕ СЕТИ
-    # ═══════════════════════════════════════
-    
-    # Instagram
+    # 📱 Instagram
     template IN A instagram.com {
         answer "{{ .Name }} 60 IN A ${SERVER_IP}"
     }
@@ -269,11 +250,7 @@ cat > /opt/smartdns/coredns/Corefile << COREFILE_EOF
         answer "{{ .Name }} 60 IN A ${SERVER_IP}"
     }
     
-    # ═══════════════════════════════════════
-    # 💬 МЕССЕНДЖЕРЫ
-    # ═══════════════════════════════════════
-    
-    # Discord
+    # 💬 Discord
     template IN A discord.com {
         answer "{{ .Name }} 60 IN A ${SERVER_IP}"
     }
@@ -298,11 +275,7 @@ cat > /opt/smartdns/coredns/Corefile << COREFILE_EOF
         answer "{{ .Name }} 60 IN A ${SERVER_IP}"
     }
     
-    # ═══════════════════════════════════════
-    # 🎬 СТРИМИНГ
-    # ═══════════════════════════════════════
-    
-    # Spotify
+    # 🎬 Spotify
     template IN A spotify.com {
         answer "{{ .Name }} 60 IN A ${SERVER_IP}"
     }
@@ -328,11 +301,7 @@ cat > /opt/smartdns/coredns/Corefile << COREFILE_EOF
         answer "{{ .Name }} 60 IN A ${SERVER_IP}"
     }
     
-    # ═══════════════════════════════════════
-    # 🔧 СЕРВИСЫ
-    # ═══════════════════════════════════════
-    
-    # OpenAI / ChatGPT
+    # 🔧 OpenAI / ChatGPT
     template IN A openai.com {
         answer "{{ .Name }} 60 IN A ${SERVER_IP}"
     }
@@ -390,10 +359,7 @@ cat > /opt/smartdns/coredns/Corefile << COREFILE_EOF
         answer "{{ .Name }} 60 IN A ${SERVER_IP}"
     }
     
-    # ═══════════════════════════════════════
     # Все остальные → Google/Cloudflare DNS
-    # ═══════════════════════════════════════
-    
     forward . 8.8.8.8 8.8.4.4 1.1.1.1 {
         prefer_udp
         health_check 5s
@@ -402,131 +368,177 @@ cat > /opt/smartdns/coredns/Corefile << COREFILE_EOF
 COREFILE_EOF
 
 # SNI Proxy config
-cat > /opt/smartdns/sniproxy/config.yaml << 'SNIPROXY_EOF'
-tls_addr: 0.0.0.0:443
-http_addr: 0.0.0.0:80
-dns_addr: 8.8.8.8:53
-timeout: 10
+cat > /opt/smartdns/sniproxy/sniproxy.conf << 'SNIPROXY_EOF'
+user daemon
+pidfile /var/run/sniproxy.pid
 
-allowed_domains:
-  # Игры (Supercell)
-  - "*.brawlstars.com"
-  - "brawlstars.com"
-  - "*.supercell.com"
-  - "supercell.com"
-  - "*.supercell.net"
-  - "supercell.net"
-  - "*.clashofclans.com"
-  - "clashofclans.com"
-  - "*.clashroyale.com"
-  - "clashroyale.com"
-  
-  # Instagram
-  - "*.instagram.com"
-  - "instagram.com"
-  - "*.cdninstagram.com"
-  
-  # Facebook
-  - "*.facebook.com"
-  - "facebook.com"
-  - "*.fbcdn.net"
-  - "*.facebook.net"
-  - "*.fb.com"
-  - "fb.com"
-  
-  # Twitter / X
-  - "*.twitter.com"
-  - "twitter.com"
-  - "*.x.com"
-  - "x.com"
-  - "*.twimg.com"
-  - "t.co"
-  
-  # Threads
-  - "*.threads.net"
-  - "threads.net"
-  
-  # Discord
-  - "*.discord.com"
-  - "discord.com"
-  - "*.discordapp.com"
-  - "discordapp.com"
-  - "*.discord.gg"
-  - "discord.gg"
-  - "*.discord.media"
-  - "*.discordapp.net"
-  
-  # LinkedIn
-  - "*.linkedin.com"
-  - "linkedin.com"
-  - "*.licdn.com"
-  
-  # Spotify
-  - "*.spotify.com"
-  - "spotify.com"
-  - "*.spotifycdn.com"
-  - "*.scdn.co"
-  
-  # SoundCloud
-  - "*.soundcloud.com"
-  - "soundcloud.com"
-  - "*.sndcdn.com"
-  
-  # Netflix
-  - "*.netflix.com"
-  - "netflix.com"
-  - "*.nflxvideo.net"
-  - "*.nflximg.net"
-  - "*.nflxext.com"
-  - "*.nflxso.net"
-  
-  # Twitch
-  - "*.twitch.tv"
-  - "twitch.tv"
-  - "*.ttvnw.net"
-  - "*.jtvnw.net"
-  
-  # OpenAI / ChatGPT
-  - "*.openai.com"
-  - "openai.com"
-  
-  # Notion
-  - "*.notion.so"
-  - "notion.so"
-  - "*.notion.com"
-  - "notion.com"
-  
-  # Medium
-  - "*.medium.com"
-  - "medium.com"
-  
-  # Patreon
-  - "*.patreon.com"
-  - "patreon.com"
-  
-  # BBC
-  - "*.bbc.com"
-  - "bbc.com"
-  - "*.bbc.co.uk"
-  - "bbc.co.uk"
-  - "*.bbci.co.uk"
-  
-  # Archive.org
-  - "*.archive.org"
-  - "archive.org"
-  
-  # ProtonMail
-  - "*.protonmail.com"
-  - "protonmail.com"
-  - "*.proton.me"
-  - "proton.me"
-  
-  # PayPal
-  - "*.paypal.com"
-  - "paypal.com"
-  - "*.paypalobjects.com"
+resolver {
+    nameserver 8.8.8.8
+    nameserver 1.1.1.1
+    mode ipv4_only
+}
 
-log_level: info
+listener 0.0.0.0:80 {
+    proto http
+    table http_hosts
+}
+
+listener 0.0.0.0:443 {
+    proto tls
+    table https_hosts
+}
+
+table http_hosts {
+    .*\.brawlstars\.com$ *
+    brawlstars\.com$ *
+    .*\.supercell\.com$ *
+    supercell\.com$ *
+    .*\.supercell\.net$ *
+    supercell\.net$ *
+    .*\.clashofclans\.com$ *
+    clashofclans\.com$ *
+    .*\.clashroyale\.com$ *
+    clashroyale\.com$ *
+    .*\.instagram\.com$ *
+    instagram\.com$ *
+    .*\.cdninstagram\.com$ *
+    .*\.facebook\.com$ *
+    facebook\.com$ *
+    .*\.fbcdn\.net$ *
+    .*\.facebook\.net$ *
+    .*\.fb\.com$ *
+    fb\.com$ *
+    .*\.twitter\.com$ *
+    twitter\.com$ *
+    .*\.x\.com$ *
+    x\.com$ *
+    .*\.twimg\.com$ *
+    t\.co$ *
+    .*\.threads\.net$ *
+    threads\.net$ *
+    .*\.discord\.com$ *
+    discord\.com$ *
+    .*\.discordapp\.com$ *
+    discordapp\.com$ *
+    .*\.discord\.gg$ *
+    discord\.gg$ *
+    .*\.discordapp\.net$ *
+    .*\.linkedin\.com$ *
+    linkedin\.com$ *
+    .*\.licdn\.com$ *
+    .*\.spotify\.com$ *
+    spotify\.com$ *
+    .*\.spotifycdn\.com$ *
+    .*\.scdn\.co$ *
+    .*\.soundcloud\.com$ *
+    soundcloud\.com$ *
+    .*\.sndcdn\.com$ *
+    .*\.netflix\.com$ *
+    netflix\.com$ *
+    .*\.nflxvideo\.net$ *
+    .*\.nflximg\.net$ *
+    .*\.twitch\.tv$ *
+    twitch\.tv$ *
+    .*\.ttvnw\.net$ *
+    .*\.openai\.com$ *
+    openai\.com$ *
+    .*\.notion\.so$ *
+    notion\.so$ *
+    .*\.notion\.com$ *
+    notion\.com$ *
+    .*\.medium\.com$ *
+    medium\.com$ *
+    .*\.patreon\.com$ *
+    patreon\.com$ *
+    .*\.bbc\.com$ *
+    bbc\.com$ *
+    .*\.bbc\.co\.uk$ *
+    bbc\.co\.uk$ *
+    .*\.archive\.org$ *
+    archive\.org$ *
+    .*\.protonmail\.com$ *
+    protonmail\.com$ *
+    .*\.proton\.me$ *
+    proton\.me$ *
+    .*\.paypal\.com$ *
+    paypal\.com$ *
+}
+
+table https_hosts {
+    .*\.brawlstars\.com$ *
+    brawlstars\.com$ *
+    .*\.supercell\.com$ *
+    supercell\.com$ *
+    .*\.supercell\.net$ *
+    supercell\.net$ *
+    .*\.clashofclans\.com$ *
+    clashofclans\.com$ *
+    .*\.clashroyale\.com$ *
+    clashroyale\.com$ *
+    .*\.instagram\.com$ *
+    instagram\.com$ *
+    .*\.cdninstagram\.com$ *
+    .*\.facebook\.com$ *
+    facebook\.com$ *
+    .*\.fbcdn\.net$ *
+    .*\.facebook\.net$ *
+    .*\.fb\.com$ *
+    fb\.com$ *
+    .*\.twitter\.com$ *
+    twitter\.com$ *
+    .*\.x\.com$ *
+    x\.com$ *
+    .*\.twimg\.com$ *
+    t\.co$ *
+    .*\.threads\.net$ *
+    threads\.net$ *
+    .*\.discord\.com$ *
+    discord\.com$ *
+    .*\.discordapp\.com$ *
+    discordapp\.com$ *
+    .*\.discord\.gg$ *
+    discord\.gg$ *
+    .*\.discordapp\.net$ *
+    .*\.linkedin\.com$ *
+    linkedin\.com$ *
+    .*\.licdn\.com$ *
+    .*\.spotify\.com$ *
+    spotify\.com$ *
+    .*\.spotifycdn\.com$ *
+    .*\.scdn\.co$ *
+    .*\.soundcloud\.com$ *
+    soundcloud\.com$ *
+    .*\.sndcdn\.com$ *
+    .*\.netflix\.com$ *
+    netflix\.com$ *
+    .*\.nflxvideo\.net$ *
+    .*\.nflximg\.net$ *
+    .*\.twitch\.tv$ *
+    twitch\.tv$ *
+    .*\.ttvnw\.net$ *
+    .*\.openai\.com$ *
+    openai\.com$ *
+    .*\.notion\.so$ *
+    notion\.so$ *
+    .*\.notion\.com$ *
+    notion\.com$ *
+    .*\.medium\.com$ *
+    medium\.com$ *
+    .*\.patreon\.com$ *
+    patreon\.com$ *
+    .*\.bbc\.com$ *
+    bbc\.com$ *
+    .*\.bbc\.co\.uk$ *
+    bbc\.co\.uk$ *
+    .*\.archive\.org$ *
+    archive\.org$ *
+    .*\.protonmail\.com$ *
+    protonmail\.com$ *
+    .*\.proton\.me$ *
+    proton\.me$ *
+    .*\.paypal\.com$ *
+    paypal\.com$ *
+}
 SNIPROXY_EOF
 
 echo -e "${GREEN}✓ Конфигурации созданы${NC}"
@@ -572,14 +584,6 @@ if docker ps | grep -q smartdns-coredns && docker ps | grep -q smartdns-sniproxy
     echo "🍎 ${BLUE}iOS:${NC}"
     echo "   Wi-Fi:  Настройки → Wi-Fi → (i) → DNS → Вручную → ${SERVER_IP}"
     echo "   LTE/5G: Скачай 'DNSCloak' и добавь свой сервер"
-    echo ""
-    echo -e "${YELLOW}═══════════════════════════════════════════════════════════════${NC}"
-    echo -e "${YELLOW}Полезные команды:${NC}"
-    echo -e "${YELLOW}═══════════════════════════════════════════════════════════════${NC}"
-    echo "   Статус:    docker compose -f /opt/smartdns/docker-compose.yml ps"
-    echo "   Логи:      docker compose -f /opt/smartdns/docker-compose.yml logs -f"
-    echo "   Рестарт:   docker compose -f /opt/smartdns/docker-compose.yml restart"
-    echo "   Стоп:      docker compose -f /opt/smartdns/docker-compose.yml down"
     echo ""
 else
     echo -e "${RED}Ошибка при запуске! Проверь логи:${NC}"
